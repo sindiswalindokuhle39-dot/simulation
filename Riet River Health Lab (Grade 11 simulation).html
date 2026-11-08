@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Riet River Health Lab</title>
+<style>
+:root{--bg:#eef3f4;--card:#fff;--ink:#1d2b33;--mute:#53656f;--line:#c9d6db;--teal:#1f7a8c;--good:#2f7d4f;--warn:#a8741a;--bad:#b5432f;--soft:#e3eef1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11191d;--card:#1a252b;--ink:#e6eef1;--mute:#9fb2bb;--line:#33454e;--teal:#5fbfd1;--good:#6cc58f;--warn:#e3b04f;--bad:#ef8a76;--soft:#22323a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11191d;--card:#1a252b;--ink:#e6eef1;--mute:#9fb2bb;--line:#33454e;--teal:#5fbfd1;--good:#6cc58f;--warn:#e3b04f;--bad:#ef8a76;--soft:#22323a;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:780px;margin:0 auto;padding:16px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;line-height:1.2}
+h1{font-size:1.9rem;margin:.2em 0}h2{font-size:1.25rem;margin:0 0 .5em}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+p{margin:.5em 0}.mute{color:var(--mute);font-size:.92rem}
+label{display:block;font-weight:600;margin:.7em 0 .2em}
+input[type=range]{width:100%;accent-color:var(--teal)}
+select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px}
+textarea{min-height:76px}
+button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:10px 14px;background:var(--teal);color:#fff;cursor:pointer;min-height:44px}
+button.alt{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button:not(.alt){color:#0b1418}}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.val{float:right;font-weight:400;color:var(--mute)}
+.stage{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);padding:6px 0 8px;border-bottom:1px solid var(--line)}
+canvas{width:100%;display:block;border-radius:8px;border:1px solid var(--line);background:#1f6f8b}
+.meters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.meters div{border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:.75rem;line-height:1.2}
+.meters b{display:block;font-size:1.05rem}
+#status{margin-top:6px;padding:6px 10px;border-radius:6px;font-weight:600;font-size:.9rem;border-left:6px solid var(--good);background:var(--soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.act{display:flex;gap:8px;font-weight:400;margin:.35em 0}.act input{margin-top:.35em;accent-color:var(--teal)}
+.pts{height:10px;background:var(--soft);border-radius:5px;overflow:hidden;margin:6px 0}.pts i{display:block;height:100%;background:var(--good);width:0}
+.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:600px}
+th,td{border-bottom:1px solid var(--line);padding:6px;text-align:left}
+svg text{fill:var(--mute);font-size:10px}
+.crit{border-top:1px solid var(--line);padding-top:8px;margin-top:10px}
+.crit label.o,.chk label{font-weight:400;display:flex;gap:8px;margin:.35em 0}
+.crit input,.chk input{margin-top:.35em;accent-color:var(--teal)}
+.note{border-left:4px solid var(--teal);background:var(--soft);padding:8px 12px;border-radius:0 6px 6px 0}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Riet River Health Lab</h1>
+<p>Grade 11 Life Sciences · Pollution and freshwater ecosystem health · about 40 minutes</p>
+<div class="note"><b>Mystery:</b> Learners at Mokala Secondary found dead fish in the Riet River at sunrise, yet the water looked fine at midday. Why? Use the model to investigate how pollution, heat, low flow and the time of day change dissolved oxygen, then decide how the community can fix it. This is a simplified teaching model, not real Riet data.</div>
+<p class="mute"><b>Outcomes:</b> predict and test how nutrients, sewage, litter, flow and temperature affect oxygen and invertebrates; read a 24-hour graph; explain eutrophication; judge a feasible, affordable solution.</p>
+</header>
+
+<section>
+<h2>Step 1: Predict</h2>
+<p>Extra nutrients (nitrates and phosphates) from fertiliser cause algae to grow. Algae photosynthesise in daylight, but respire all the time, and when they die, decomposers use oxygen.</p>
+<label for="pred">In a river with a big algal bloom, dissolved oxygen will be…</label>
+<select id="pred"><option value="">Choose a prediction</option><option value="day">lowest during the day</option><option value="same">the same day and night</option><option value="night">lowest at night and just before dawn</option></select>
+<label for="why">Give your reason in one or two sentences.</label>
+<textarea id="why" placeholder="I think this because…"></textarea>
+</section>
+
+<section>
+<h2>Step 2: Experiment</h2>
+<div class="stage">
+<canvas id="cv" width="720" height="250" role="img" aria-label="Animated side view of the river showing water colour, algae, litter and animals"></canvas>
+<div class="meters" aria-live="polite">
+<div>Oxygen now<b id="mNow">–</b>mg/L</div>
+<div>Lowest today<b id="mMin">–</b>mg/L</div>
+<div>Nitrate<b id="mNo3">–</b>mg/L</div>
+<div>Invertebrate types<b id="mTaxa">–</b>of 12</div>
+</div>
+<div id="status" role="status"></div>
+</div>
+<p class="mute">Try a scenario, or set your own. Change <b>one thing at a time</b> for a fair test.</p>
+<div class="row" id="sc"></div>
+<div class="two">
+<div>
+<label for="N">Fertiliser runoff (nutrients) <span class="val" id="vN"></span></label><input type="range" id="N" min="0" max="100" value="20">
+<label for="S">Sewage and organic waste <span class="val" id="vS"></span></label><input type="range" id="S" min="0" max="100" value="10">
+<label for="L">Litter and solid waste <span class="val" id="vL"></span></label><input type="range" id="L" min="0" max="100" value="10">
+</div>
+<div>
+<label for="F">River flow (low in dry season) <span class="val" id="vF"></span></label><input type="range" id="F" min="5" max="100" value="60">
+<label for="T">Water temperature <span class="val" id="vT"></span></label><input type="range" id="T" min="12" max="32" value="22">
+<label for="H">Time of day <span class="val" id="vH"></span></label><input type="range" id="H" min="0" max="23.5" step="0.5" value="14">
+</div>
+</div>
+<div class="row"><button id="play">▶ Run the day</button><button class="alt" id="rec">Record this setting</button><button class="alt" id="clr">Clear table</button></div>
+<svg id="dc" viewBox="0 0 400 170" width="100%" role="img" aria-label="Line graph of dissolved oxygen over 24 hours" style="margin-top:10px"></svg>
+<p class="mute">Green dashed line: 6 mg/L (healthy). Red dashed line: 4 mg/L (animals stressed). The dot shows the time you chose.</p>
+</section>
+
+<section>
+<h2>Step 3: Fix the Riet (community challenge)</h2>
+<p>Load the polluted river, then choose actions. You have <b>10 community points</b>. <b>Goal:</b> lowest oxygen of the day at 5 mg/L or more.</p>
+<div class="row" style="margin-top:0"><button id="load">Load the polluted Riet</button></div>
+<label class="act"><input type="checkbox" id="a_buf"> Plant a reed and wetland buffer strip (3 points, filters about 40% of nutrients)</label>
+<label class="act"><input type="checkbox" id="a_fert"> Farmers apply fertiliser at the right time and amount (3 points, halves nutrient runoff)</label>
+<label class="act"><input type="checkbox" id="a_pipe"> Repair the leaking sewage pipe (4 points, cuts sewage by 80%)</label>
+<label class="act"><input type="checkbox" id="a_lit"> Learner and community clean-up with bins (2 points, cuts litter by 70%)</label>
+<label class="act"><input type="checkbox" id="a_shade"> Plant indigenous shade trees on the bank (2 points, cools water by 3 °C)</label>
+<div class="pts"><i id="pb"></i></div>
+<div id="chal" class="note" role="status"></div>
+</section>
+
+<section>
+<h2>Step 4: Evidence</h2>
+<p class="mute">Record at least 6 settings that compare clean and polluted conditions. Use “Record this setting” above.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Nutr.</th><th>Sewage</th><th>Litter</th><th>Flow</th><th>Temp</th><th>Actions</th><th>Day max</th><th>Day min</th><th>Types</th></tr></thead><tbody id="tb"></tbody></table></div>
+</section>
+
+<section>
+<h2>Step 5: Explain</h2>
+<button class="alt" id="cmp">Check my prediction against the model</button>
+<p id="cmpout" class="note" hidden></p>
+<label for="expl">Write your claim, evidence and reasoning</label>
+<textarea id="expl" placeholder="Claim: …&#10;Evidence (use numbers from your table and graph): …&#10;Reasoning (algae, respiration, decomposers, oxygen, animals): …"></textarea>
+<div class="chk">
+<label><input type="checkbox"> I used at least two numbers from my table or graph.</label>
+<label><input type="checkbox"> I explained how nutrients cause an algal bloom.</label>
+<label><input type="checkbox"> I explained why oxygen falls at night and before dawn.</label>
+<label><input type="checkbox"> I explained why low flow and high temperature make things worse.</label>
+<label><input type="checkbox"> I named one limitation of this model.</label>
+<label><input type="checkbox"> I chose actions that are affordable and feasible for our community.</label>
+</div>
+</section>
+
+<section>
+<h2>Step 6: Rate your work</h2>
+<p class="mute">Choose the level that matches what you actually did, then write your evidence.</p>
+<div id="rub"></div>
+<div class="row"><button id="tot">Calculate my score</button></div>
+<p id="totout" class="note" hidden></p>
+<label for="nxt">One specific thing I will improve next time</label>
+<textarea id="nxt"></textarea>
+<p class="mute">Your answers stay on this page and are not sent anywhere. Do not type your full name.</p>
+</section>
+<footer class="mute"><p>Model: simplified teaching model created for this lesson; the invertebrate groups follow the miniSASS idea of sensitive, moderate and tolerant types. Check licences before reusing any media.</p></footer>
+</main>
+<script>
+const $=id=>document.getElementById(id),cl=(x,a,b)=>Math.max(a,Math.min(b,x));
+const A={buf:["a_buf",3],fert:["a_fert",3],pipe:["a_pipe",4],lit:["a_lit",2],shade:["a_shade",2]};
+const SC=[["Clean headwaters",5,3,2,85,16],["Farm runoff after rain",70,10,35,85,24],["Dry season, low flow",40,25,20,10,29],["Fish-kill morning",80,60,50,25,28]];
+let trials=[],timer=null;
+function P(){const g=k=>+$(k).value,on=k=>$(A[k][0]).checked;
+ return{N:g("N")*(on("buf")?.6:1)*(on("fert")?.5:1),S:g("S")*(on("pipe")?.2:1),L:g("L")*(on("lit")?.3:1),F:g("F"),T:g("T")-(on("shade")?3:0),H:g("H")};}
+function doAt(p,h){const sat=10.3-.18*(p.T-15),f=1.6-.012*p.F,eN=p.N*f,eS=p.S*f,alg=cl(eN*.9*(1+.03*(p.T-20)),0,100),s=Math.sin(Math.PI*(h-6)/12);
+ return{o:Math.max(.5,sat-.05*eS-.01*p.L-.015*alg+.03*alg*s),alg,no3:.5+eN*.12};}
+function counts(o){return[Math.round(5*cl((o-3.5)/4.5,0,1)),Math.round(4*cl((o-2)/4,0,1)),Math.round(3*cl((o-.5)/2,0,1))];}
+function day(p){let mn=99,mx=0;for(let h=0;h<24;h+=.5){const o=doAt(p,h).o;mn=Math.min(mn,o);mx=Math.max(mx,o);}return{mn,mx};}
+function cls(o){return o>=7?["Healthy","good"]:o>=5?["Fair","good"]:o>=3?["Poor","warn"]:["Very poor","bad"];}
+function fmtH(h){return String(Math.floor(h)).padStart(2,"0")+":"+(h%1?"30":"00");}
+const used=()=>Object.values(A).reduce((s,[id,c])=>s+($(id).checked?c:0),0);
+function update(){
+ const p=P(),d=day(p),now=doAt(p,p.H),tx=counts(d.mn),c=cls(d.mn);
+ $("vN").textContent=$("N").value;$("vS").textContent=$("S").value;$("vL").textContent=$("L").value;$("vF").textContent=$("F").value;$("vT").textContent=$("T").value+" °C";$("vH").textContent=fmtH(p.H);
+ $("mNow").textContent=now.o.toFixed(1);$("mMin").textContent=d.mn.toFixed(1);$("mNo3").textContent=now.no3.toFixed(1);$("mTaxa").textContent=tx[0]+tx[1]+tx[2];
+ $("status").textContent="River health: "+c[0]+(d.mn<3?". Oxygen crashes overnight, so fish and most invertebrates die.":d.mn<5?". Sensitive animals cannot survive the night.":". A diverse community can live here.");
+ $("status").style.borderLeftColor="var(--"+c[1]+")";
+ const u=used();$("pb").style.width=Math.min(u*10,100)+"%";$("pb").style.background=u>10?"var(--bad)":"var(--good)";
+ $("chal").textContent="Points used: "+u+" of 10. Lowest oxygen: "+d.mn.toFixed(1)+" mg/L. "+(u>10?"Over budget. Remove an action.":d.mn>=5?"Goal met! Now explain why your choices worked.":"Goal not met yet. Which action gives the most oxygen for its cost?");
+ chart(p);if(reduce)frame(0);
+}
+function chart(p){let pts="";const X=h=>30+h/24*360,Y=o=>150-o*11;
+ for(let h=0;h<=24;h+=.5)pts+=X(h)+","+Y(doAt(p,h%24).o)+" ";
+ let s='<line x1="30" y1="150" x2="390" y2="150" stroke="currentColor" opacity=".4"/><line x1="30" x2="390" y1="'+Y(6)+'" y2="'+Y(6)+'" stroke="#2f7d4f" stroke-dasharray="4 3"/><line x1="30" x2="390" y1="'+Y(4)+'" y2="'+Y(4)+'" stroke="#b5432f" stroke-dasharray="4 3"/>';
+ s+='<text x="2" y="12">mg/L</text><text x="14" y="'+(Y(6)+3)+'">6</text><text x="14" y="'+(Y(4)+3)+'">4</text><text x="20" y="153">0</text>';
+ [0,6,12,18,24].forEach(h=>s+='<text x="'+(X(h)-8)+'" y="165">'+fmtH(h%24)+'</text>');
+ s+='<polyline points="'+pts+'" fill="none" stroke="#1f7a8c" stroke-width="2.5"/><circle cx="'+X(p.H)+'" cy="'+Y(doAt(p,p.H).o)+'" r="5" fill="#c58b2a"/>';
+ $("dc").innerHTML=s;}
+/* animated river */
+const cv=$("cv"),cx=cv.getContext("2d"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function frame(t){
+ const p=P(),W=720,Hh=250,r=doAt(p,p.H),s=Math.sin(Math.PI*(p.H-6)/12),pol=cl((r.alg*.5+p.S*.3+p.L*.2)/100,0,1);
+ const dayL=cl((s+.25)/1.25,.12,1);
+ const g=cx.createLinearGradient(0,0,0,Hh);g.addColorStop(0,"hsl("+(200-130*pol)+",45%,"+(48*dayL+6)+"%)");g.addColorStop(1,"hsl("+(205-110*pol)+",40%,"+(30*dayL+4)+"%)");
+ cx.fillStyle=g;cx.fillRect(0,0,W,Hh);
+ cx.fillStyle="rgba(255,255,255,.12)";for(let i=0;i<14;i++){const y=30+i*14,x=((i*97+t*.02*(p.F+10)/10)%900)-100;cx.fillRect(x,y,80+i*5,2);}
+ cx.fillStyle="#6b5a45";cx.fillRect(0,Hh-26,W,26);
+ cx.fillStyle="rgba(130,100,70,.8)";for(let i=0;i<12;i++)cx.fillRect(i*62+10,Hh-30,30,8);
+ if($(A.buf[0]).checked){cx.font="30px serif";for(let i=0;i<12;i++)cx.fillText("🌾",i*62+5,Hh-6);}
+ cx.fillStyle="rgba(60,160,50,"+(.15+r.alg/160)+")";const nb=Math.round(r.alg/6);for(let i=0;i<nb;i++){const x=(i*83+t*.01)%760-20;cx.beginPath();cx.ellipse(x,10+(i%3)*5,34,8+r.alg/18,0,0,7);cx.fill();}
+ cx.font="22px serif";const nl=Math.round(p.L/7);for(let i=0;i<nl;i++){const x=((i*131+t*.03*(p.F+10)/10)%780)-30;cx.fillText(["🧴","🛍️","🥤"][i%3],x,24+Math.sin(t/500+i)*3);}
+ const [a,b,c]=counts(r.o);cx.font="26px serif";
+ const pl=(em,n,sd,y0)=>{for(let i=0;i<n;i++){const x=60+((i*149+sd*53)%620)+Math.sin(t/900+i+sd)*20,y=y0+((i*37+sd*17)%50)+Math.cos(t/700+i)*6;cx.fillText(em,x,y);}};
+ pl("🦐",a,1,100);pl("🪲",b,2,150);pl("🐌",c,3,208);
+ if(r.o>=3){const nf=Math.round(cl((r.o-2.5)/1.5,0,1)*Math.min(4,cl(r.o-2.5,0,4)));for(let i=0;i<nf;i++){const x=((t*.05*(i+1)+i*190)%800)-40;cx.fillText("🐟",x,60+i*18+Math.sin(t/400+i)*6);}}
+ else{for(let i=0;i<4;i++){cx.save();cx.translate(120+i*140,16);cx.rotate(Math.PI);cx.fillText("🐟",0,0);cx.restore();}}
+ if(dayL<.5){cx.fillStyle="rgba(0,10,40,"+(.5-dayL)*.8+")";cx.fillRect(0,0,W,Hh);}
+ cx.font="20px serif";cx.fillStyle="#fff";cx.fillText(s>-.05&&p.H>=5.5&&p.H<=18.5?"☀️":"🌙",W-34,Hh-34);
+ if(!reduce)requestAnimationFrame(frame);}
+/* controls */
+["N","S","L","F","T","H"].forEach(k=>$(k).addEventListener("input",update));
+Object.values(A).forEach(([id])=>$(id).addEventListener("change",update));
+$("sc").innerHTML=SC.map((x,i)=>'<button class="alt" data-i="'+i+'">'+x[0]+'</button>').join("");
+$("sc").onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const x=SC[i];["N","S","L","F","T"].forEach((k,j)=>$(k).value=x[j+1]);update();};
+$("load").onclick=()=>{["N","S","L","F","T"].forEach((k,j)=>$(k).value=SC[3][j+1]);Object.values(A).forEach(([id])=>$(id).checked=false);update();};
+$("play").onclick=()=>{if(timer){clearInterval(timer);timer=null;$("play").textContent="▶ Run the day";return;}
+ $("play").textContent="⏸ Pause";timer=setInterval(()=>{let h=+$("H").value+.5;if(h>23.5)h=0;$("H").value=h;update();},reduce?900:250);};
+$("rec").onclick=()=>{if(trials.length>=12){alert("Table is full. Clear it to start again.");return;}
+ const p=P(),d=day(p),tx=counts(d.mn);trials.push({N:$("N").value,S:$("S").value,L:$("L").value,F:$("F").value,T:$("T").value,act:Object.keys(A).filter(k=>$(A[k][0]).checked).length,mx:d.mx,mn:d.mn,tx:tx[0]+tx[1]+tx[2]});
+ $("tb").innerHTML=trials.map((t,i)=>"<tr><td>"+(i+1)+"</td><td>"+t.N+"</td><td>"+t.S+"</td><td>"+t.L+"</td><td>"+t.F+"</td><td>"+t.T+"</td><td>"+t.act+"</td><td>"+t.mx.toFixed(1)+"</td><td>"+t.mn.toFixed(1)+"</td><td>"+t.tx+"</td></tr>").join("");};
+$("clr").onclick=()=>{trials=[];$("tb").innerHTML="";};
+$("cmp").onclick=()=>{const o=$("cmpout");o.hidden=false;const p=P(),pr=$("pred").value;
+ if(!pr){o.textContent="Go back to Step 1 and choose a prediction first.";return;}
+ const r=doAt(p,14);if(r.alg<25){o.textContent="Your river has too little algae to see the effect. Raise the nutrients to 70 or more, then check again.";return;}
+ const d=day(p),pk=[...Array(48)].map((_,i)=>[doAt(p,i/2).o,i/2]).sort((x,y)=>x[0]-y[0])[0][1];
+ const real=pk>=18||pk<=6?"night":"day";
+ o.textContent="With your settings, oxygen peaks at "+d.mx.toFixed(1)+" mg/L in the afternoon and drops to "+d.mn.toFixed(1)+" mg/L around "+fmtH(pk)+". "+(pr===real?"That matches your prediction. Now explain it: what are the algae doing at night?":"That is different from your prediction. Look at your graph again: when is the lowest point, and why does photosynthesis stop then?");};
+const crit=[
+["Prediction and reasoning","I predicted but gave no reason.","My reason mentions algae or oxygen.","My reason links nutrients, algae, respiration and oxygen, and I checked it against the graph."],
+["Fair test and data","I changed several sliders at once.","I changed one variable at a time and recorded 6 settings.","I controlled variables, recorded a clean-to-polluted spread and compared day and night values."],
+["Interpreting evidence","I described what happened only.","I described a pattern using at least two numbers.","I used numbers to explain patterns, compared pollutants and named a limitation of the model."],
+["Solution and feasibility","I made no clear choice of actions.","I chose actions and met the goal or came close.","I met the goal within 10 points and justified why each action suits our community."]];
+$("rub").innerHTML=crit.map((c,i)=>'<div class="crit"><b>'+(i+1)+". "+c[0]+'</b>'+[1,2,3].map(k=>'<label class="o"><input type="radio" name="c'+i+'" value="'+k+'"><span>'+["Developing: ","Proficient: ","Distinguished: "][k-1]+c[k]+'</span></label>').join("")+'<label for="ev'+i+'">Evidence for my rating</label><textarea id="ev'+i+'" style="min-height:52px"></textarea></div>').join("");
+$("tot").onclick=()=>{let s=0,m=0;crit.forEach((c,i)=>{const r=document.querySelector('input[name="c'+i+'"]:checked');r?s+=+r.value:m++;});const o=$("totout");o.hidden=false;
+ o.textContent=m?"Rate all 4 criteria first.":"Score: "+s+" out of 12. "+(s>=10?"Strong work. Try a new challenge with high temperature and low flow.":s>=7?"Good. Fix the criterion where you chose Developing first.":"Pick one criterion and redo that part of the experiment.");};
+update();if(!reduce)requestAnimationFrame(frame);
+</script>
+</body>
+</html>
